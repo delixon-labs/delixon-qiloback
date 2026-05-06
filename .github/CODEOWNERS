@@ -1,0 +1,27 @@
+# QiloBack — Code Owners (public wrapper repository)
+#
+# Every PR requires approval from at least one code owner once branch
+# protection with "Require review from Code Owners" is enabled at the
+# org plan that supports it. On plans without enforcement, this file is
+# informational and surfaces ownership in the GitHub UI.
+
+# Default owners — every file unless overridden below
+*                        @mundowise @rrestevez-dell
+
+# Distribution wrappers
+/npm/                    @mundowise @rrestevez-dell
+/pip/                    @mundowise @rrestevez-dell
+
+# CI/CD and repository configuration
+/.github/                @mundowise
+
+# Public-facing documentation and legal files
+/docs/                   @mundowise
+LICENSE                  @mundowise
+LICENSE-FAQ.md           @mundowise
+NOTICE                   @mundowise
+SECURITY.md              @mundowise
+README.md                @mundowise @rrestevez-dell
+CHANGELOG.md             @mundowise
+CONTRIBUTING.md          @mundowise
+CODE_OF_CONDUCT.md       @mundowise

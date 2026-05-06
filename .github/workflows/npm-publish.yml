@@ -1,0 +1,102 @@
+name: Publish npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g. 0.3.0)"
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      # `id-token: write` enables OIDC: this job signs a JWT with the
+      # workflow's identity and npm validates it against the Trusted
+      # Publisher configured at
+      # https://www.npmjs.com/package/@delixon/qiloback/access
+      # (delixon-labs/delixon-qiloback + npm-publish.yml + environment
+      # production). No long-lived registry tokens, no OTP, no secrets
+      # to rotate.
+      #
+      # `contents: write` is needed to commit + push the version bump
+      # to the repository after a successful publish (see "Commit
+      # version bump" below). This keeps package.json aligned with the
+      # version actually published to npm.
+      id-token: write
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          # ref: local because main is protected (require PR + enforce
+          # admins) and the workflow cannot push directly. local is
+          # the working branch with no PR restriction. The owner
+          # promotes manually local -> dev -> main following the
+          # repository's standard flow.
+          ref: local
+          # fetch-depth: 0 so the subsequent push works (depth=1 leaves
+          # HEAD detached and refuses pushes).
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        # Node 24 (LTS) ships npm >= 11, required for OIDC trusted
+        # publishing. Node 22 ships npm 10.x which does NOT support
+        # OIDC; `npm install -g npm@latest` fails in CI with a
+        # MODULE_NOT_FOUND (promise-retry) self-update race. Bumping
+        # Node is the clean path.
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Update version
+        working-directory: npm/cli
+        run: npm version ${{ github.event.inputs.version }} --no-git-tag-version
+
+      - name: Publish @delixon/qiloback
+        working-directory: npm/cli
+        # --provenance attaches a signed attestation to the package:
+        # users see in npm that the .tgz was built by this exact
+        # workflow from this repository, not injected by an attacker
+        # with a leaked token.
+        run: npm publish --access public --provenance
+
+      - name: Commit version bump via REST API (server-signed)
+        # If the publish succeeded, commit the bumped package.json to
+        # `local` using the GitHub Contents REST API
+        # (PUT /repos/{owner}/{repo}/contents/{path}). The endpoint
+        # creates the commit server-side and signs it automatically
+        # with GitHub's web flow key (B5690EEEBB952194), so it lands
+        # already verified and compatible with `required_signatures`
+        # on main when promoted.
+        #
+        # We do not use `git commit` in shell because the runner has
+        # no SSH/GPG key configured → unsigned commit → blocked on
+        # main.
+        #
+        # If the publish failed, this step does not run because of
+        # the default `if: success()`.
+        env:
+          REPO: ${{ github.repository }}
+          NEW_VERSION: ${{ github.event.inputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILE_PATH: npm/cli/package.json
+          BRANCH: local
+        run: |
+          set -euo pipefail
+          NEW_CONTENT_B64=$(base64 -w0 < "${FILE_PATH}")
+          REMOTE_META=$(gh api "repos/${REPO}/contents/${FILE_PATH}?ref=${BRANCH}")
+          CURRENT_SHA=$(echo "${REMOTE_META}" | jq -r '.sha')
+          REMOTE_CONTENT_B64=$(echo "${REMOTE_META}" | jq -r '.content' | tr -d '\n' | base64 -d | base64 -w0)
+          if [ "${NEW_CONTENT_B64}" = "${REMOTE_CONTENT_B64}" ]; then
+            echo "No changes to commit (package.json already at requested version)."
+            exit 0
+          fi
+          gh api -X PUT "repos/${REPO}/contents/${FILE_PATH}" \
+            -f "message=chore(npm): bump @delixon/qiloback to ${NEW_VERSION} (auto)" \
+            -f "content=${NEW_CONTENT_B64}" \
+            -f "sha=${CURRENT_SHA}" \
+            -f "branch=${BRANCH}"

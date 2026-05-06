@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+/*
+ * Thin shim that exec's the native qiloback binary placed in ../bin/
+ * by scripts/postinstall.js. Args and stdio pass through unchanged.
+ */
+const { spawn } = require("child_process");
+const { existsSync, statSync } = require("fs");
+const { join } = require("path");
+
+const binaryName = process.platform === "win32" ? "qiloback.exe" : "qiloback";
+const binaryPath = join(__dirname, binaryName);
+
+if (!existsSync(binaryPath)) {
+  console.error(`@delixon/qiloback: native binary not found at ${binaryPath}`);
+  console.error(
+    "The postinstall script may have been skipped. Try: npm rebuild @delixon/qiloback",
+  );
+  process.exit(1);
+}
+
+if (process.platform !== "win32") {
+  try {
+    const mode = statSync(binaryPath).mode;
+    if ((mode & 0o111) === 0) {
+      const { chmodSync } = require("fs");
+      chmodSync(binaryPath, 0o755);
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+const child = spawn(binaryPath, process.argv.slice(2), {
+  stdio: "inherit",
+  windowsHide: true,
+});
+
+child.on("close", (code, signal) => {
+  if (signal) {
+    process.kill(process.pid, signal);
+  } else {
+    process.exit(code ?? 0);
+  }
+});
+child.on("error", (err) => {
+  console.error("@delixon/qiloback: failed to run native binary:", err.message);
+  process.exit(1);
+});

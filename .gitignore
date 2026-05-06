@@ -1,0 +1,71 @@
+# Local environment files (never committed)
+.env
+.env.local
+.env.*.local
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+Thumbs.db:encryptable
+
+# Editor and IDE state — personal to each developer
+.vscode/*
+!.vscode/extensions.json
+*.code-workspace
+.vscode/terminal-history.txt
+.vscode/bash-history.txt
+.idea/
+*.swp
+*.swo
+*.suo
+.cursor/
+
+# Claude AI workspace metadata (per-machine)
+.claude/
+
+# Internal docs that are not part of the public surface
+.delidocs/
+.delixon.docs/
+qiloback.docs/
+
+# npm
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python build artefacts
+*.egg-info/
+dist/
+build/
+*.egg
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.python-version
+.venv/
+venv/
+
+# Test and coverage output
+coverage/
+.nyc_output/
+.coverage
+htmlcov/
+.pytest_cache/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+
+# QiloBack runtime artefacts (cached binaries, signing material) — never to repo
+.qiloback/
+.keys/
+
+# Misc
+*.log
+*.tsbuildinfo
+.cache/
+.temp/
