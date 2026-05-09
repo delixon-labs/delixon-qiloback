@@ -1,4 +1,4 @@
-# @delixon/qiloback
+# @qiloback/qiloback
 
 QiloBack CLI distributed via npm. Wraps the native `qiloback` binary
 published in GitHub Releases.
@@ -6,14 +6,14 @@ published in GitHub Releases.
 ## Install
 
 ```bash
-npm install -g @delixon/qiloback
+npm install -g @qiloback/qiloback
 qiloback --version
 ```
 
 Or one-shot:
 
 ```bash
-npx @delixon/qiloback init my-app
+npx @qiloback/qiloback init my-app
 ```
 
 ## How it works

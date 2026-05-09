@@ -4,27 +4,33 @@ All notable changes to QiloBack are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-This file tracks the **public wrapper** release line — the npm package `@delixon/qiloback`, the PyPI package `qiloback-cli`, and the binaries attached to GitHub Releases. Internal generator changes that ship in the same tag are summarised here at release time.
+This file tracks the **public wrapper** release line — the npm package `@qiloback/qiloback`, the PyPI package `qiloback-cli`, and the binaries attached to GitHub Releases. Internal generator changes that ship in the same tag are summarised here at release time.
 
 ## [Unreleased]
 
+## [0.3.3] — 2026-05-09
+
 ### Changed
 
-- Public wrapper repository created at `delixon-labs/delixon-qiloback`. The npm and pip CLI wrappers, the user-facing documentation, the license and the compliance files now live here. The generator and platform sources remain in `delixon-labs/qiloback-core` (private) under the FSL window.
-- Wrapper README, CONTRIBUTING and SECURITY files updated to reflect the split-repository layout. Installation commands (`npm install -g @delixon/qiloback`, `pip install qiloback-cli`) are unchanged.
+- npm scope flipped from `@delixon` to `@qiloback`. The package is now `@qiloback/qiloback`. The PyPI package name (`qiloback-cli`) and the binary download surface are unchanged.
+- README, CHANGELOG, the npm-publish workflow and the dependabot configuration updated to reference the new scope.
+
+### Notes
+
+- The 0.3.0–0.3.2 tags in `delixon-labs/qiloback-core` were cut while the public-wrapper publish path was being prepared; 0.3.3 is the first version that publishes from this repository to npm and PyPI.
 
 ## [0.3.0] — Unreleased
 
-The first release cut from the new public wrapper repository.
+The initial release cut from the new public wrapper repository — never published, superseded by 0.3.3.
 
 ### Added
 
-- npm wrapper `@delixon/qiloback` — downloads and verifies the `qiloback` binary on first install, caches it under `~/.qiloback/bin/`, exposes `qiloback` and `qb` aliases.
+- npm wrapper `@qiloback/qiloback` — downloads and verifies the `qiloback` binary on first install, caches it under `~/.qiloback/bin/`, exposes `qiloback` and `qb` aliases.
 - pip wrapper `qiloback-cli` — same flow as the npm wrapper, written in stdlib-only Python (no third-party runtime deps for the wrapper itself).
 - `SHA256SUMS` verification on first install for both wrappers; mismatch deletes the partial download and aborts.
 - `QILOBACK_BINARY` and `QILOBACK_SKIP_POSTINSTALL` environment variables for development against unreleased builds and offline installs.
 - GitHub Releases assets per platform: `qiloback-cli-{win32,linux,darwin}-{x64,arm64}` plus the `SHA256SUMS` index.
-- OIDC trusted publishing for both `@delixon/qiloback` (npm) and `qiloback-cli` (PyPI). No long-lived registry tokens are stored in repository secrets.
+- OIDC trusted publishing for both `@qiloback/qiloback` (npm) and `qiloback-cli` (PyPI). No long-lived registry tokens are stored in repository secrets.
 
 ### Security
 
