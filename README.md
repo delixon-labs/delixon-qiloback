@@ -34,7 +34,7 @@ QiloBack is split across two repositories:
 ### CLI via npm
 
 ```bash
-npm install -g @delixon/qiloback
+npm install -g @qiloback/qiloback
 qiloback --version
 ```
 
@@ -85,7 +85,7 @@ The full CLI reference and DSL specification are kept in the private core reposi
 | Generator   | Python 3.12 · Jinja2 · Pydantic 2 · Click · uv                   |
 | Runtime     | FastAPI · SQLAlchemy 2 · Alembic · PostgreSQL 16 · Redis         |
 | Admin panel | Next.js 15 · React 19 · TypeScript · Tailwind · Vitest           |
-| Distribution| pip (`qiloback-cli`) · npm (`@delixon/qiloback`) · GitHub Releases |
+| Distribution| pip (`qiloback-cli`) · npm (`@qiloback/qiloback`) · GitHub Releases |
 | Platforms   | Windows · macOS · Linux                                          |
 
 ## License

@@ -15,7 +15,7 @@ jobs:
       # `id-token: write` enables OIDC: this job signs a JWT with the
       # workflow's identity and npm validates it against the Trusted
       # Publisher configured at
-      # https://www.npmjs.com/package/@delixon/qiloback/access
+      # https://www.npmjs.com/package/@qiloback/qiloback/access
       # (delixon-labs/delixon-qiloback + npm-publish.yml + environment
       # production). No long-lived registry tokens, no OTP, no secrets
       # to rotate.
@@ -56,7 +56,7 @@ jobs:
         working-directory: npm/cli
         run: npm version ${{ github.event.inputs.version }} --no-git-tag-version
 
-      - name: Publish @delixon/qiloback
+      - name: Publish @qiloback/qiloback
         working-directory: npm/cli
         # --provenance attaches a signed attestation to the package:
         # users see in npm that the .tgz was built by this exact
@@ -96,7 +96,7 @@ jobs:
             exit 0
           fi
           gh api -X PUT "repos/${REPO}/contents/${FILE_PATH}" \
-            -f "message=chore(npm): bump @delixon/qiloback to ${NEW_VERSION} (auto)" \
+            -f "message=chore(npm): bump @qiloback/qiloback to ${NEW_VERSION} (auto)" \
             -f "content=${NEW_CONTENT_B64}" \
             -f "sha=${CURRENT_SHA}" \
             -f "branch=${BRANCH}"
