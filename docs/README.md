@@ -1,16 +1,27 @@
 # Documentation
 
-User-facing documentation for QiloBack lives in this folder as it stabilises. During the FSL window, the canonical references for the DSL grammar, the generator pipeline and the runtime APIs are kept in the private core repository (`delixon-labs/qiloback-core/docs/`) and released alongside each tagged version.
+User-facing documentation for QiloBack lives in this folder as it
+stabilises. During the FSL window, the canonical references for the
+DSL grammar, the generator pipeline and the runtime APIs are kept in
+the private core repository (`delixon-labs/qiloback-core/docs/`) and
+released alongside each tagged version.
 
-For now, the main entry points are:
+## Public guides
 
-- [README.md](../README.md) — installation, usage overview, and project information.
-- [CHANGELOG.md](../CHANGELOG.md) — version history and release notes.
-- [LICENSE](../LICENSE) and [LICENSE-FAQ.md](../LICENSE-FAQ.md) — license text and frequently asked questions.
-- [SECURITY.md](../SECURITY.md) — how to report security vulnerabilities.
-- [CONTRIBUTING.md](../CONTRIBUTING.md) — how to contribute.
+- **[Getting started](getting-started.md)** — every install path, what each one gives you, the 26 CLI commands, the typical first-time flow.
 
-The CLI itself ships with self-documenting help:
+## Project documents
+
+- [README](../README.md) — installation snapshot, usage overview, project information.
+- [CHANGELOG](../CHANGELOG.md) — version history and release notes.
+- [LICENSE](../LICENSE) and [LICENSE-FAQ](../LICENSE-FAQ.md) — license text and frequently asked questions.
+- [SECURITY](../SECURITY.md) — how to report a vulnerability.
+- [CONTRIBUTING](../CONTRIBUTING.md) — how to contribute.
+- [CODE_OF_CONDUCT](../CODE_OF_CONDUCT.md) — community standards.
+
+## Self-documenting CLI
+
+The CLI ships with a help system on every subcommand:
 
 ```bash
 qiloback --help
@@ -19,4 +30,6 @@ qiloback generate --help
 qiloback eject --help
 ```
 
-Detailed guides — DSL reference, module catalogue, RLS recipes, deployment runbooks — will be added here over time and become public on the same cadence as the FSL → Apache 2.0 conversion of each release.
+Detailed guides — DSL reference, module catalogue, RLS recipes,
+deployment runbooks — land here on the same cadence as each tagged
+release converts from FSL to Apache 2.0.
