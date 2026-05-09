@@ -6,7 +6,7 @@
 
 version: 2
 updates:
-  # npm wrapper — @delixon/qiloback
+  # npm wrapper — @qiloback/qiloback
   - package-ecosystem: npm
     directory: "/npm/cli"
     schedule:
