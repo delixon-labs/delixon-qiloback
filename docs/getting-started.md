@@ -136,8 +136,7 @@ Exposes `QiloBackClient`, `ProjectsApi`, `ComponentsApi`, `AuditApi`,
 ### Self-host: Docker images
 
 ```bash
-docker pull ghcr.io/delixon-labs/qiloback-platform-api:0.3.3
-docker pull ghcr.io/delixon-labs/qiloback-runtime-api:0.3.3
+docker pull ghcr.io/delixon-labs/qiloback:0.3.3
 docker pull ghcr.io/delixon-labs/qiloback-worker:0.3.3
 ```
 
