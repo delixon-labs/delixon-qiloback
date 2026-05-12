@@ -8,6 +8,26 @@ This file tracks the **public wrapper** release line — the npm package `@qilob
 
 ## [Unreleased]
 
+## [0.3.4] — 2026-05-11
+
+### Added
+
+- CLI parity with the panel — ten new sub-trees so every surface the
+  panel renders is also reachable from the terminal: `secrets`,
+  `cron`, `webhooks`, `channels`, `edge-functions`, `storage`,
+  `auth-config`, `members`, `domains`, `logs`. All owner-scoped
+  through the platform-api.
+- Interactive TUI rebuild — running `qiloback` with no args opens
+  the terminal UI with six sections (Sesión, Workspace, Build,
+  Project, Deploy, Ops) and 25+ actions.
+- Per-command `--help` examples and shell completions for bash /
+  zsh / fish via `qiloback completions install`.
+
+### Notes
+
+- The binary tagged `v0.3.4` carries the new sub-trees + TUI. PyPI
+  + npm package versions are pinned to the same `0.3.4` tag.
+
 ## [0.3.3] — 2026-05-09
 
 ### Changed

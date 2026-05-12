@@ -1,6 +1,6 @@
 {
   "name": "@qiloback/qiloback",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "QiloBack CLI — backend manufacturing platform. Generate FastAPI backends from a YAML DSL. Source-available (FSL-1.1-ALv2).",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Delixon Labs <hello@delixon.dev> (https://delixon.dev)",
