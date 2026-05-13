@@ -54,7 +54,23 @@ jobs:
 
       - name: Update version
         working-directory: npm/cli
-        run: npm version ${{ github.event.inputs.version }} --no-git-tag-version
+        # ``npm version X`` fails with "Version not changed" when
+        # package.json is already at the target. That is the
+        # right outcome for an idempotent re-publish (the wrapper
+        # source was pre-bumped during the v0.3.9 cut, then this
+        # workflow was redispatched manually to land the tag on
+        # the registry). Skip the bump step in that case so the
+        # downstream ``npm publish`` still runs.
+        env:
+          NEW_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          if [ "$CURRENT" = "$NEW_VERSION" ]; then
+            echo "package.json already at version $NEW_VERSION — skipping bump."
+          else
+            npm version "$NEW_VERSION" --no-git-tag-version
+            echo "Bumped package.json from $CURRENT to $NEW_VERSION."
+          fi
 
       - name: Publish @qiloback/qiloback
         working-directory: npm/cli
@@ -62,7 +78,21 @@ jobs:
         # users see in npm that the .tgz was built by this exact
         # workflow from this repository, not injected by an attacker
         # with a leaked token.
-        run: npm publish --access public --provenance
+        #
+        # Probe ``npm view`` first so a re-run on the same version
+        # (or a redispatch after the qiloback-core monorepo has
+        # already pushed @qiloback/qiloback@$VERSION to the registry)
+        # exits 0 instead of failing with E403 "cannot publish over
+        # the previously published versions". Same pattern as the
+        # core repo's publish-npm-wrappers and publish-mcp-server.
+        run: |
+          PKG_NAME=$(node -p "require('./package.json').name")
+          PKG_VER=$(node -p "require('./package.json').version")
+          if npm view "$PKG_NAME@$PKG_VER" version >/dev/null 2>&1; then
+            echo "$PKG_NAME@$PKG_VER already on npm — skipping."
+            exit 0
+          fi
+          npm publish --access public --provenance
 
       - name: Commit version bump via REST API (server-signed)
         # If the publish succeeded, commit the bumped package.json to
