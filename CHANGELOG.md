@@ -8,6 +8,101 @@ This file tracks the **public wrapper** release line — the npm package `@qilob
 
 ## [Unreleased]
 
+## [0.3.9] — 2026-05-12
+
+### Added
+
+- **Sprint 9 surface in the CLI.** The `qiloback` binary tagged
+  `v0.3.9` ships every Sprint 9 endpoint reachable from the
+  terminal: per-project staging environments (`qiloback env list /
+  create / deploy / archive`), self-service backups (`qiloback
+  backup trigger / list / download`), webhook deliveries +
+  retry policy editor, and the per-project typed SDK builder
+  (`qiloback sdk build {ts|py|dart|go|swift}`).
+- **Nexenv interop.** New sub-commands wire the CLI to the local
+  Nexenv engine when one is attached: `qiloback nexenv
+  handshake / hint`, plus `qiloback generate --stream` for the
+  Server-Sent Events generation stream.
+- **Storage cap + monthly egress in `qiloback quota`.** The four
+  free-tier counters (projects, daily_requests, database_bytes,
+  monthly_egress_bytes) now render with severity bars so the
+  CLI matches the panel's overage banner.
+
+### Fixed (production hardening)
+
+- POST `/projects` no longer returns 500 on a slug race —
+  `IntegrityError` is mapped to a 409 Conflict with a CORS
+  envelope so the panel surfaces a usable message instead of
+  a NetworkError cascade.
+- Runtime URL surface — generated projects now expose
+  `https://runtime.qiloback.dev/p/{slug}/api/v1` (the control
+  plane lived on `api.qiloback.dev`; the prior wrapper pointed
+  the deploy CTA at the wrong host).
+- Generated projects with slugs containing hyphens (e.g.
+  `mi-tienda`) load correctly — the runtime mounter now
+  translates the slug to a valid Python module name before
+  importing.
+- Codegen emits `requirements.txt` alongside `pyproject.toml`
+  so legacy buildpacks (Render, Heroku, certain CI cache
+  layers) read the dependency list without a PEP 621 parser.
+- Ingest endpoints fall back to writable storage paths
+  (`/var/lib/qiloback/ingest` → `/tmp/qiloback/ingest`) when
+  the container's working directory is read-only.
+
+### Changed
+
+- **Package manager.** The workspace has moved off npm onto
+  pnpm 11. CI runners, the admin-panel Docker image and the
+  release-package-managers workflow all target Node 22 + pnpm
+  11 in lockstep. Documented in the core repo's
+  `~/.config/pnpm/config.yaml` and reflected here for users
+  building from the monorepo.
+
+### Notes
+
+- All distribution surfaces ship at `0.3.9` together: npm
+  (`@qiloback/qiloback`, `@qiloback/sdk`, `@qiloback/qiloback-mcp`,
+  `@qiloback/claude-code-qiloback`), PyPI (`qiloback-cli`,
+  `qiloback-mcp`, `qiloback-sdk`), VS Code Marketplace
+  (`delixon-labs.qiloback-dsl`), Open VSX, Helm chart, and 27
+  signed CLI / Rust binaries attached to the GitHub Release.
+
+## [0.3.8] — 2026-05-12
+
+### Added
+
+- npm + PyPI publish wrappers in this public repository now run
+  on every `v*` tag pushed from `delixon-labs/qiloback-core`,
+  so a release no longer requires a manual `pnpm publish` step.
+- Dependabot disabled in the wrapper repo (the wrappers carry
+  no runtime third-party deps); the core repo is the single
+  authoritative dependency surface.
+
+## [0.3.7] — 2026-05-11
+
+### Added
+
+- Sprint 8 ingest hardening reflected in the CLI — `qiloback
+  ingest upload` honours the per-project quota, surfaces the
+  storage cap, and retries 5xx with exponential backoff.
+
+## [0.3.6] — 2026-05-11
+
+### Added
+
+- Internal release infrastructure: SLSA-style provenance
+  attached to every GitHub Release asset; sigstore signatures
+  cover the cross-platform CLI binaries.
+
+## [0.3.5] — 2026-05-11
+
+### Added
+
+- Cross-platform CLI binaries (`linux-x64`, `linux-arm64`,
+  `darwin-arm64`, `win32-x64.exe`) attached to the GitHub
+  Release. Wrapper postinstall downloads the right one based
+  on `process.platform` + `process.arch`.
+
 ## [0.3.4] — 2026-05-11
 
 ### Added
@@ -57,5 +152,12 @@ The initial release cut from the new public wrapper repository — never publish
 - Wrapper postinstall scripts download via HTTPS only, follow up to 5 redirects, retry transient failures up to 3 times with backoff, and require a successful SHA-256 check (or an explicit forward-compatibility warning when `SHA256SUMS` is absent in older releases).
 - Repository ships with a gitleaks allowlist (`.gitleaks.toml` in the core repository) pinned to audited fixture paths and explicit regexes; the public wrapper repo carries no runtime credentials.
 
-[Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.9...HEAD
+[0.3.9]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.9
+[0.3.8]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.8
+[0.3.7]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.7
+[0.3.6]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.6
+[0.3.5]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.5
+[0.3.4]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.4
+[0.3.3]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.3
 [0.3.0]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.0
