@@ -64,16 +64,29 @@ jobs:
               sys.exit(f"invalid version: {v!r}")
           p = pathlib.Path("pyproject.toml")
           text = p.read_text(encoding="utf-8")
-          new = re.sub(
-              r'^(version\s*=\s*)"[^"]*"',
-              lambda m: f'{m.group(1)}"{v}"',
-              text,
-              count=1,
-              flags=re.MULTILINE,
-          )
-          if new == text:
+          # Detect the field FIRST so the "already at target" path
+          # does not collide with the "field missing" path. The
+          # previous logic compared the post-substitution text to the
+          # original and emitted "field not found" in both cases,
+          # which masked the real diagnosis when the file was already
+          # bumped (a frequent scenario after a tagged release where
+          # the source already carries the target version).
+          field = re.search(r'^version\s*=\s*"([^"]*)"', text, flags=re.MULTILINE)
+          if not field:
               sys.exit("version field not found in pyproject.toml")
-          p.write_text(new, encoding="utf-8")
+          current = field.group(1)
+          if current == v:
+              print(f"pyproject.toml already at version {v} — skipping bump.")
+          else:
+              new = re.sub(
+                  r'^(version\s*=\s*)"[^"]*"',
+                  lambda m: f'{m.group(1)}"{v}"',
+                  text,
+                  count=1,
+                  flags=re.MULTILINE,
+              )
+              p.write_text(new, encoding="utf-8")
+              print(f"Bumped pyproject.toml from {current} to {v}.")
           PY
 
       - name: Build sdist and wheel
@@ -92,6 +105,11 @@ jobs:
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.13.0
         with:
           packages-dir: pip/cli/dist
+          # Idempotent — a re-run on the same tag (or a re-tag) no
+          # longer fails the workflow with E403 "version already
+          # exists". Same posture as the core repo's publish-mcp
+          # and publish-sdks workflows after the v0.3.9 close.
+          skip-existing: true
 
       - name: Commit version bump via REST API (server-signed)
         # If the upload to PyPI succeeded, commit the bumped
