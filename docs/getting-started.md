@@ -38,7 +38,7 @@ install works on any minimal CPython 3.10+ image without extra deps.
 ### CLI via direct binary download
 
 ```bash
-curl -L https://github.com/delixon-labs/delixon-qiloback/releases/download/v0.3.10/qiloback-linux-x64 \
+curl -L https://github.com/delixon-labs/delixon-qiloback/releases/download/v0.3.11/qiloback-linux-x64 \
   -o qiloback
 chmod +x qiloback
 sudo mv qiloback /usr/local/bin/
@@ -136,8 +136,8 @@ Exposes `QiloBackClient`, `ProjectsApi`, `ComponentsApi`, `AuditApi`,
 ### Self-host: Docker images
 
 ```bash
-docker pull ghcr.io/delixon-labs/qiloback:0.3.10
-docker pull ghcr.io/delixon-labs/qiloback-worker:0.3.10
+docker pull ghcr.io/delixon-labs/qiloback:0.3.11
+docker pull ghcr.io/delixon-labs/qiloback-worker:0.3.11
 ```
 
 Three images cover the control plane (platform-api), the generated
@@ -149,7 +149,7 @@ images lands in `docs/self-host.md` (in progress).
 
 ```bash
 helm repo add qiloback https://delixon-labs.github.io/qiloback-helm
-helm install qiloback qiloback/qiloback --version 0.3.10
+helm install qiloback qiloback/qiloback --version 0.3.11
 ```
 
 For Kubernetes deployments. The chart provisions the same three
