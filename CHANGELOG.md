@@ -8,6 +8,33 @@ This file tracks the **public wrapper** release line — the npm package `@qilob
 
 ## [Unreleased]
 
+## [0.3.10] — 2026-05-13
+
+### Security
+
+- Lockstep bump with ``delixon-labs/qiloback-core`` v0.3.10.
+  The core release closes 43 of 45 Dependabot alerts left open
+  at v0.3.9 — Next 14 → 15 + React 18 → 19 plus the Python deps
+  (Mako, urllib3, python-multipart). Wrapper itself carries no
+  third-party runtime deps, so this release just re-pins the
+  binary download URL + the PyPI/npm wrapper manifests.
+
+### Fixed
+
+- Three regressions that hid in the v0.3.9 binaries (validation
+  422 → 500 with no CORS, RUM ingest crashing on
+  ``meter.increment(...)``, ``telemetry/events?kind=rum``
+  returning empty after a successful POST) are all fixed in the
+  core repo; the v0.3.10 binaries this wrapper downloads carry
+  the patches.
+
+### Notes
+
+- ``Publish npm`` and ``Publish pip`` workflows on this repo
+  are idempotent now — re-dispatching a tag's publish run no
+  longer fails with ``"version not changed"`` or
+  ``"E403 cannot publish"``.
+
 ## [0.3.9] — 2026-05-12
 
 ### Added
@@ -152,7 +179,8 @@ The initial release cut from the new public wrapper repository — never publish
 - Wrapper postinstall scripts download via HTTPS only, follow up to 5 redirects, retry transient failures up to 3 times with backoff, and require a successful SHA-256 check (or an explicit forward-compatibility warning when `SHA256SUMS` is absent in older releases).
 - Repository ships with a gitleaks allowlist (`.gitleaks.toml` in the core repository) pinned to audited fixture paths and explicit regexes; the public wrapper repo carries no runtime credentials.
 
-[Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.9...HEAD
+[Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.10...HEAD
+[0.3.10]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.10
 [0.3.9]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.9
 [0.3.8]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.8
 [0.3.7]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.7
