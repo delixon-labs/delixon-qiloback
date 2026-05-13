@@ -8,6 +8,27 @@ This file tracks the **public wrapper** release line — the npm package `@qilob
 
 ## [Unreleased]
 
+## [0.3.11] — 2026-05-13
+
+### Fixed
+
+- **No more 409 on project creation.** Lockstep with the core
+  release: POST /api/v1/projects now auto-suffixes the
+  slug (slug-2, slug-3…) instead of rejecting the
+  request when the requested slug is already taken globally.
+- **Drag-and-drop folder ingest works in the panel.** Dropping
+  a folder onto the ingest drop zone now routes to
+  /ingest/upload-folder instead of trying to ship it as a
+  zip to /ingest/upload and getting a 400. Archive drops
+  still flow through /ingest/upload unchanged.
+
+### Notes
+
+- All distribution surfaces ship at 0.3.11 together: npm
+  (4 packages), PyPI (3 packages), VS Code Marketplace, Open
+  VSX, Helm chart, the GitHub Release with the signed CLI /
+  Rust binaries.
+
 ## [0.3.10] — 2026-05-13
 
 ### Security
@@ -179,7 +200,8 @@ The initial release cut from the new public wrapper repository — never publish
 - Wrapper postinstall scripts download via HTTPS only, follow up to 5 redirects, retry transient failures up to 3 times with backoff, and require a successful SHA-256 check (or an explicit forward-compatibility warning when `SHA256SUMS` is absent in older releases).
 - Repository ships with a gitleaks allowlist (`.gitleaks.toml` in the core repository) pinned to audited fixture paths and explicit regexes; the public wrapper repo carries no runtime credentials.
 
-[Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.10...HEAD
+[Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.11...HEAD
+[0.3.11]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.11
 [0.3.10]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.10
 [0.3.9]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.9
 [0.3.8]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.8
