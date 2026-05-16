@@ -8,6 +8,32 @@ This file tracks the **public wrapper** release line — the npm package `@qilob
 
 ## [Unreleased]
 
+## [0.5.1] — 2026-05-16
+
+Lockstep bump with `delixon-labs/qiloback-core` v0.5.1. Hot patch
+on top of v0.5.0 with two user-facing changes:
+
+- **Fix:** `qiloback auth test-token create` no longer crashes
+  with `TypeError: PlatformClient.request() got an unexpected
+  keyword argument 'json'`. The CLI HTTP wrapper now accepts
+  `json=` (httpx / requests convention) as an alias of the
+  legacy `json_body=`.
+- **Added:** `qiloback update` checks for newer releases on this
+  repo, prints the release notes inline, and runs the right
+  upgrade command for the install channel (pip / npm / GitHub
+  binary). Background probe rate-limited to once per 24 h via
+  `~/.qiloback/last-update-check`. Disable with
+  `QILOBACK_NO_UPDATE_CHECK=1`. The companion `qiloback update
+  doctor` exposes every signal the auto-updater consults.
+
+### Changed
+
+- npm: `@qiloback/qiloback` 0.5.0 → 0.5.1.
+- PyPI: `qiloback-cli` 0.5.0 → 0.5.1.
+- Both wrappers download the matching `v0.5.1` binaries from
+  GitHub Releases on first install and verify them against the
+  published `SHA256SUMS`.
+
 ## [0.5.0] — 2026-05-15
 
 Lockstep bump with `delixon-labs/qiloback-core` v0.5.0. The
@@ -223,6 +249,7 @@ The initial release cut from the new public wrapper repository — never publish
 - Repository ships with a gitleaks allowlist (`.gitleaks.toml` in the core repository) pinned to audited fixture paths and explicit regexes; the public wrapper repo carries no runtime credentials.
 
 [0.5.0]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.5.0
+[0.5.1]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.5.1
 [Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.11...HEAD
 [0.3.11]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.11
 [0.3.10]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.10

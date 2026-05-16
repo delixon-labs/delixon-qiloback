@@ -38,7 +38,7 @@ install works on any minimal CPython 3.10+ image without extra deps.
 ### CLI via direct binary download
 
 ```bash
-curl -L https://github.com/delixon-labs/delixon-qiloback/releases/download/v0.5.0/qiloback-linux-x64 \
+curl -L https://github.com/delixon-labs/delixon-qiloback/releases/download/v0.5.1/qiloback-linux-x64 \
   -o qiloback
 chmod +x qiloback
 sudo mv qiloback /usr/local/bin/
