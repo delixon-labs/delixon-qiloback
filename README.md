@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/logo-qiloback.png" width="180" alt="QiloBack" />
+</p>
+
 <h1 align="center">QiloBack</h1>
 
 <p align="center">
@@ -8,10 +12,18 @@
 
 <p align="center">
   <a href="https://qiloback.dev">Website</a> ·
+  <a href="https://app.qiloback.dev">App</a> ·
   <a href="https://github.com/delixon-labs/delixon-qiloback/releases">Releases</a> ·
   <a href="LICENSE">License</a> ·
   <a href="CHANGELOG.md">Changelog</a> ·
   <a href="LICENSE-FAQ.md">License FAQ</a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@qiloback/qiloback"><img src="https://img.shields.io/npm/v/@qiloback/qiloback?label=npm&color=ff6b2c" alt="npm" /></a>
+  <a href="https://pypi.org/project/qiloback-cli/"><img src="https://img.shields.io/pypi/v/qiloback-cli?label=pypi&color=ff6b2c" alt="PyPI" /></a>
+  <a href="https://github.com/delixon-labs/delixon-qiloback/releases"><img src="https://img.shields.io/github/v/release/delixon-labs/delixon-qiloback?color=ff6b2c" alt="GitHub release" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-FSL--1.1--ALv2-ff6b2c" alt="License" /></a>
 </p>
 
 ---
