@@ -8,53 +8,62 @@ This file tracks the **public wrapper** release line — the npm package `@qilob
 
 ## [Unreleased]
 
+## [0.5.3] — 2026-05-16
+
+Lockstep bump with `delixon-labs/qiloback-core` v0.5.3. Restores
+`qiloback update --yes` as a one-shot self-upgrade across pip and
+npm channels.
+
+### Fixed
+
+- **`qiloback update --yes`** now correctly identifies the
+  install channel (pip / npm / github) and runs the matching
+  `pip install --upgrade …` or `npm install -g …` automatically.
+  The pip/npm wrappers export `QILOBACK_INSTALL_CHANNEL` before
+  spawning the binary; the binary's detector reads it as the
+  authoritative signal — `sys.argv[0]` alone was unreliable
+  because the PyInstaller binary always sees its own cached
+  path under `~/.qiloback/bin/`, regardless of how it was
+  installed.
+
+### Distribution
+
+- `@qiloback/qiloback@0.5.0` and `@0.5.1` are npm-deprecated with
+  a `use 0.5.3+` message. Their wrappers had a hard-coded download
+  URL pointing at the private `qiloback-core` repo and would HTTP
+  404 on every platform. New installs through `latest` (= 0.5.3)
+  carry the corrected URL and a working postinstall.
+
+## [0.5.2] — 2026-05-16
+
+npm wrapper `RELEASE_BASE_URL` repointed at the public
+`delixon-qiloback` repo where the release assets live. The 0.5.0
+and 0.5.1 wrappers shipped pointing at the private `qiloback-core`
+repo, returning HTTP 404 on every install. The native CLI binary
+itself does not change between 0.5.1 and 0.5.2.
+
 ## [0.5.1] — 2026-05-16
 
-Lockstep bump with `delixon-labs/qiloback-core` v0.5.1. Hot patch
-on top of v0.5.0 with two user-facing changes:
+Hot patch on top of v0.5.0. Two user-facing changes:
 
 - **Fix:** `qiloback auth test-token create` no longer crashes
   with `TypeError: PlatformClient.request() got an unexpected
   keyword argument 'json'`. The CLI HTTP wrapper now accepts
   `json=` (httpx / requests convention) as an alias of the
   legacy `json_body=`.
-- **Added:** `qiloback update` checks for newer releases on this
-  repo, prints the release notes inline, and runs the right
-  upgrade command for the install channel (pip / npm / GitHub
-  binary). Background probe rate-limited to once per 24 h via
-  `~/.qiloback/last-update-check`. Disable with
-  `QILOBACK_NO_UPDATE_CHECK=1`. The companion `qiloback update
-  doctor` exposes every signal the auto-updater consults.
+- **Added:** `qiloback update` — checks for newer releases on
+  this repo, prints release notes inline, and runs the right
+  upgrade command. Background probe rate-limited to once per 24 h
+  via `~/.qiloback/last-update-check`. Disable with
+  `QILOBACK_NO_UPDATE_CHECK=1`. Companion `qiloback update doctor`
+  exposes every signal the auto-updater consults.
 
-### Changed
+## [0.5.0] — 2026-05-16
 
-- npm: `@qiloback/qiloback` 0.5.0 → 0.5.1.
-- PyPI: `qiloback-cli` 0.5.0 → 0.5.1.
-- Both wrappers download the matching `v0.5.1` binaries from
-  GitHub Releases on first install and verify them against the
-  published `SHA256SUMS`.
-
-## [0.5.0] — 2026-05-15
-
-Lockstep bump with `delixon-labs/qiloback-core` v0.5.0. The
-core release brings the Live Backend (dual-mode runtime, hot
-apply, destructive-op flow with five-minute undo, Dev/Prod
-parity gate), self-hosted frontend hosting via the new
-``qiloback`` provider, the developer plan + ``qb_test_…``
-long-lived tokens for SDK / CI / partner integrations, and the
-seven audit-driven fixes (eject backend boots end-to-end via
-``docker compose``, Caddy custom-domain pipeline, runtime path
-rewrite, lifetime project quota, AI Builder sandbox + Ollama,
-``QILOBACK_GENERATED_DIR`` empty-string guard). Detail in the
-core CHANGELOG.
-
-### Changed
-
-- npm: `@qiloback/qiloback` 0.3.11 → 0.5.0.
-- PyPI: `qiloback-cli` 0.3.11 → 0.5.0.
-- Both wrappers download the matching `v0.5.0` binaries from
-  GitHub Releases on first install and verify them against
-  the published `SHA256SUMS`.
+Live Backend (Sprint 11) shipped. Self-hosted frontend hosting,
+dual-mode runtime (mock + live), Ollama auto-wiring, developer
+plan with long-lived `qb_test_…` tokens, lifetime project count
+and 7 `BUG_*` follow-ups.
 
 ## [0.3.11] — 2026-05-13
 
@@ -248,8 +257,6 @@ The initial release cut from the new public wrapper repository — never publish
 - Wrapper postinstall scripts download via HTTPS only, follow up to 5 redirects, retry transient failures up to 3 times with backoff, and require a successful SHA-256 check (or an explicit forward-compatibility warning when `SHA256SUMS` is absent in older releases).
 - Repository ships with a gitleaks allowlist (`.gitleaks.toml` in the core repository) pinned to audited fixture paths and explicit regexes; the public wrapper repo carries no runtime credentials.
 
-[0.5.0]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.5.0
-[0.5.1]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.5.1
 [Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.11...HEAD
 [0.3.11]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.11
 [0.3.10]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.10

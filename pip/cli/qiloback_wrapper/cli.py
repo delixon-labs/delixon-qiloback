@@ -165,9 +165,17 @@ def _ensure_binary() -> Path:
 
 
 def main() -> None:
-    """Entry point: lazy-fetch the binary, then exec it with argv."""
+    """Entry point: lazy-fetch the binary, then exec it with argv.
+
+    Exports ``QILOBACK_INSTALL_CHANNEL=pip`` so the binary's update
+    detector can pick the right upgrade command (``pip install
+    --upgrade``) instead of falling back to the generic GitHub
+    download path. The wrapper is the only side that knows for sure
+    how the user installed the CLI."""
     binary = _ensure_binary()
-    completed = subprocess.run([str(binary), *sys.argv[1:]], check=False)
+    env = os.environ.copy()
+    env.setdefault("QILOBACK_INSTALL_CHANNEL", "pip")
+    completed = subprocess.run([str(binary), *sys.argv[1:]], check=False, env=env)
     sys.exit(completed.returncode)
 
 
