@@ -38,7 +38,7 @@ install works on any minimal CPython 3.10+ image without extra deps.
 ### CLI via direct binary download
 
 ```bash
-curl -L https://github.com/delixon-labs/delixon-qiloback/releases/download/v0.5.1/qiloback-linux-x64 \
+curl -L https://github.com/delixon-labs/delixon-qiloback/releases/download/v0.5.3/qiloback-cli-linux-x64 \
   -o qiloback
 chmod +x qiloback
 sudo mv qiloback /usr/local/bin/
@@ -46,7 +46,8 @@ qiloback --version
 ```
 
 Useful in CI images that ship neither Node nor Python. Verify the binary
-against `SHA256SUMS.txt` attached to the same release.
+against `SHA256SUMS` (or its `SHA256SUMS.txt` alias) attached to the same
+release.
 
 Available platforms: `linux-x64`, `linux-arm64`, `darwin-arm64`,
 `win32-x64.exe`, plus `darwin-x64` ⏳.
@@ -136,8 +137,8 @@ Exposes `QiloBackClient`, `ProjectsApi`, `ComponentsApi`, `AuditApi`,
 ### Self-host: Docker images
 
 ```bash
-docker pull ghcr.io/delixon-labs/qiloback:0.3.11
-docker pull ghcr.io/delixon-labs/qiloback-worker:0.3.11
+docker pull ghcr.io/delixon-labs/qiloback:0.5.3
+docker pull ghcr.io/delixon-labs/qiloback-worker:0.5.3
 ```
 
 Three images cover the control plane (platform-api), the generated
@@ -149,7 +150,7 @@ images lands in `docs/self-host.md` (in progress).
 
 ```bash
 helm repo add qiloback https://delixon-labs.github.io/qiloback-helm
-helm install qiloback qiloback/qiloback --version 0.3.11
+helm install qiloback qiloback/qiloback --version 0.5.3
 ```
 
 For Kubernetes deployments. The chart provisions the same three
@@ -249,6 +250,29 @@ Bundled templates: `saas-starter`, `ecommerce`, `cms`, `crm`,
 | `qiloback deploy` | Sync the project to the configured self-host target and restart the container stack |
 | `qiloback benchmark` | Performance regression suite against a running runtime API |
 | `qiloback mcp serve` | Run the MCP server locally for AI-tool integration |
+
+### Self-update
+
+| Command | What it does |
+|---|---|
+| `qiloback update` | Check the public release feed; if a newer version is available, print release notes and run the right upgrade command for the install channel (`pip install --upgrade …`, `npm install -g …`) |
+| `qiloback update --check` | Notify only — never install. Same probe used in the background once every 24 h so any other CLI invocation surfaces the available version inline. |
+| `qiloback update --yes` | Skip the confirmation prompt. |
+| `qiloback update --json` | Machine-readable payload — the raw GitHub release record + the resolved channel. |
+| `qiloback update doctor` | Print every signal the auto-updater consults (current version, install channel, executable path, package managers available, last/next auto-check, kill-switch state). Useful when `qiloback update` does not pick the right upgrade command. |
+
+The detector reads `QILOBACK_INSTALL_CHANNEL` first (set by the pip/npm
+wrappers when they spawn the binary), then falls back to path heuristics
+for raw-binary installs. Set `QILOBACK_NO_UPDATE_CHECK=1` to disable the
+background probe entirely (CI runners, sandboxed environments).
+
+> Wrappers shipped before 0.5.3 (the npm `@qiloback/qiloback@0.5.0`,
+> `0.5.1`, and `0.5.2`, plus the matching pip versions) do **not** set
+> `QILOBACK_INSTALL_CHANNEL` and so `qiloback update --yes` falls
+> through to the manual instructions panel for those installs. Upgrading
+> to `0.5.3+` once via `pip install --upgrade qiloback-cli` (or `npm
+> install -g @qiloback/qiloback@latest`) restores the one-shot
+> auto-upgrade for every release after that.
 
 ## Typical first-time flow
 
