@@ -8,6 +8,63 @@ This file tracks the **public wrapper** release line — the npm package `@qilob
 
 ## [Unreleased]
 
+## [0.5.3] — 2026-05-16
+
+Lockstep bump with `delixon-labs/qiloback-core` v0.5.3. Restores
+`qiloback update --yes` as a one-shot self-upgrade across pip and
+npm channels.
+
+### Fixed
+
+- **`qiloback update --yes`** now correctly identifies the
+  install channel (pip / npm / github) and runs the matching
+  `pip install --upgrade …` or `npm install -g …` automatically.
+  The pip/npm wrappers export `QILOBACK_INSTALL_CHANNEL` before
+  spawning the binary; the binary's detector reads it as the
+  authoritative signal — `sys.argv[0]` alone was unreliable
+  because the PyInstaller binary always sees its own cached
+  path under `~/.qiloback/bin/`, regardless of how it was
+  installed.
+
+### Distribution
+
+- `@qiloback/qiloback@0.5.0` and `@0.5.1` are npm-deprecated with
+  a `use 0.5.3+` message. Their wrappers had a hard-coded download
+  URL pointing at the private `qiloback-core` repo and would HTTP
+  404 on every platform. New installs through `latest` (= 0.5.3)
+  carry the corrected URL and a working postinstall.
+
+## [0.5.2] — 2026-05-16
+
+npm wrapper `RELEASE_BASE_URL` repointed at the public
+`delixon-qiloback` repo where the release assets live. The 0.5.0
+and 0.5.1 wrappers shipped pointing at the private `qiloback-core`
+repo, returning HTTP 404 on every install. The native CLI binary
+itself does not change between 0.5.1 and 0.5.2.
+
+## [0.5.1] — 2026-05-16
+
+Hot patch on top of v0.5.0. Two user-facing changes:
+
+- **Fix:** `qiloback auth test-token create` no longer crashes
+  with `TypeError: PlatformClient.request() got an unexpected
+  keyword argument 'json'`. The CLI HTTP wrapper now accepts
+  `json=` (httpx / requests convention) as an alias of the
+  legacy `json_body=`.
+- **Added:** `qiloback update` — checks for newer releases on
+  this repo, prints release notes inline, and runs the right
+  upgrade command. Background probe rate-limited to once per 24 h
+  via `~/.qiloback/last-update-check`. Disable with
+  `QILOBACK_NO_UPDATE_CHECK=1`. Companion `qiloback update doctor`
+  exposes every signal the auto-updater consults.
+
+## [0.5.0] — 2026-05-16
+
+Live Backend (Sprint 11) shipped. Self-hosted frontend hosting,
+dual-mode runtime (mock + live), Ollama auto-wiring, developer
+plan with long-lived `qb_test_…` tokens, lifetime project count
+and 7 `BUG_*` follow-ups.
+
 ## [0.3.11] — 2026-05-13
 
 ### Fixed
