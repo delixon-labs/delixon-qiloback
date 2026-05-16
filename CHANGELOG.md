@@ -8,6 +8,28 @@ This file tracks the **public wrapper** release line — the npm package `@qilob
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-05-15
+
+Lockstep bump with `delixon-labs/qiloback-core` v0.5.0. The
+core release brings the Live Backend (dual-mode runtime, hot
+apply, destructive-op flow with five-minute undo, Dev/Prod
+parity gate), self-hosted frontend hosting via the new
+``qiloback`` provider, the developer plan + ``qb_test_…``
+long-lived tokens for SDK / CI / partner integrations, and the
+seven audit-driven fixes (eject backend boots end-to-end via
+``docker compose``, Caddy custom-domain pipeline, runtime path
+rewrite, lifetime project quota, AI Builder sandbox + Ollama,
+``QILOBACK_GENERATED_DIR`` empty-string guard). Detail in the
+core CHANGELOG.
+
+### Changed
+
+- npm: `@qiloback/qiloback` 0.3.11 → 0.5.0.
+- PyPI: `qiloback-cli` 0.3.11 → 0.5.0.
+- Both wrappers download the matching `v0.5.0` binaries from
+  GitHub Releases on first install and verify them against
+  the published `SHA256SUMS`.
+
 ## [0.3.11] — 2026-05-13
 
 ### Fixed
@@ -200,6 +222,7 @@ The initial release cut from the new public wrapper repository — never publish
 - Wrapper postinstall scripts download via HTTPS only, follow up to 5 redirects, retry transient failures up to 3 times with backoff, and require a successful SHA-256 check (or an explicit forward-compatibility warning when `SHA256SUMS` is absent in older releases).
 - Repository ships with a gitleaks allowlist (`.gitleaks.toml` in the core repository) pinned to audited fixture paths and explicit regexes; the public wrapper repo carries no runtime credentials.
 
+[0.5.0]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.5.0
 [Unreleased]: https://github.com/delixon-labs/delixon-qiloback/compare/v0.3.11...HEAD
 [0.3.11]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.11
 [0.3.10]: https://github.com/delixon-labs/delixon-qiloback/releases/tag/v0.3.10
